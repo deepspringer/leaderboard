@@ -1,0 +1,334 @@
+<head>
+  <title>Pierrepont</title>
+  <meta name="viewport" content="width=device-width, user-scalable=no">
+  <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600' rel='stylesheet' type='text/css'>
+</head>
+
+<body>
+  <div class="outer{{schedule}}">
+    <div align ="right" >{{> loginButtons}}</div>
+    <h1 class="title">
+      <img src="PierrepontOwl.png" style="width:32px;height:42px;">
+      <span style = "display: block;" >Pierrepont</span>
+      </h1>
+    {{> menu}}
+    <div class="subtitle"> </div>
+    {{#if isStudents}}
+      {{> students}}
+      {{/if}}
+    {{#if isTeachers}}
+      {{> teachers}}
+    {{/if}}
+    {{#if isRooms}}
+      {{> rooms}}
+    {{/if}}
+    {{#if isSubjects}}
+      {{> subjects}}
+    {{/if}}
+    {{#if isSchedule}}
+      {{> schedulePageState}}
+    {{/if}}
+  </div>
+</body>
+
+
+<template name="students">
+  {{#if hasSubState}}
+    {{> studentSubState}}
+  {{else}}
+    <ul class="students">
+      {{#each students}}
+        {{> student}}
+      {{/each}}
+    </ul>
+  <!--  {{> addScientist}}-->
+  {{/if}}
+</template>
+
+<template name="studentSubState">
+  <h1> {{name}} </h1>
+  {{> studentSubMenu}}
+  {{#if isInfo}}
+  <h2>Personal Information</h2>
+      {{> personalInfoTable}}
+  {{/if}}
+  {{#if isCourses}}
+      {{> studentCourseList}}
+  {{/if}}
+  {{#if isSchedule}}
+    {{> scheduleTable}}
+  {{/if}}
+</template>
+
+<template name = "scheduleTable">
+  <h2>Schedule</h2>
+  <table class = "schedule"><tr><td colspan = 6 align = "center" style="font-size:28px">Pierrepont</td></tr>
+    <tr><td colspan = 6 ><span style="float:left;">{{name}}</span><span style="float:right;">2016-2017</span></td></tr>
+    <tr><td colspan = 6 height = 12></td></tr>
+    <tr><td class = "schedulePer"></td>
+      <td class = "schedule">Monday</td>
+      <td class = "schedule">Tuesday</td>
+      <td class = "schedule">Wednesday</td>
+      <td class = "schedule">Thursday</td>
+      <td class = "schedule">Friday</td>
+    </tr>
+  {{#each scheduleRows}}
+    {{> scheduleRow}}
+  {{/each}}
+</table>
+</template>
+
+<template name = "scheduleRow">
+  <tr class = "schedule">
+    <td class = "schedulePer">{{period}}</td>
+    {{#each scheduleCells}}
+    {{> scheduleCell}}
+    {{/each}}
+  </tr>
+</template>
+
+<template name = "scheduleCell">
+    <td class = "schedule">
+      <div> {{name}} </div>
+      <div> {{teacher}} </div>
+      <div> {{room}} </div>
+    </td>
+</template>
+
+<template name = "studentCourseList">
+  <h2>Courses</h2>
+  <ul>
+    {{#each courses}}
+      {{> course}}
+    {{/each}}
+  </ul>
+</template>
+
+<template name = "personalInfoTable">
+  <table class='info'>
+    {{#each fields}}
+      {{> field}}
+    {{/each}}
+  </table>
+</template>
+
+<template name = "field">
+  <tr name="info">
+    <td class="info">{{name}}</td>
+    {{#if isEdit}}
+    <td class="info"><form class="editInfo">
+      <input type="text" name="text" placeholder="New Value" style="font-size:12pt;"/>
+    </form>
+    <div>{{value}}</div>
+    </td>
+    {{else}}
+    <span class = "value"><td class = "value">{{value}}</td></span>
+    {{/if}}
+    {{#if isEdit}}
+    <span class="cancelEdit">
+      <td class="value">Cancel</td>
+    </span>
+      {{/if}}
+  </tr>
+</template>
+
+<template name="student">
+  <li class="player {{selected}}">
+    <span class="name"><div name="studentName">{{name}}</div></span>
+    {{#if isSelected}}
+      {{> studentSubMenu}}
+    {{/if}}
+  </li>
+</template>
+
+<template name = "studentSubMenu">
+  <table class="options">
+    <tr>
+      <span class="info"><td class="options">Personal Info</td></span>
+      <span class="schedule"><td class="options">Schedule</td></span>
+      <span class="courses"><td class="options">Courses</td></span>
+    </tr>
+  </table>
+</template>
+
+<template name = "menu">
+  {{#if currentUser}}
+  <table class = "menu">
+    <tr>
+      <span class="students"><td class="menu"> Students </td></span>
+      <span class="teachers"><td class="menu"> Teachers </td></span>
+      <span class="subjects"><td class="menu"> Subjects </td></span>
+      <span class="rooms"><td class="menu"> Rooms </td></span>
+      <span class="schedule"><td class="menu"> Schedule </td></span>
+    </tr>
+  </table>
+  {{else}}
+  <!--form id="login-form" class="login-form" action="action">
+    <div> Email: <input type="email" id="login-email" /> </div>
+    <div> Password: <input type="password" id="login-password" /></div>
+    <div>  <input type="submit" id="login-button" value="Sign in" /></div>
+ </form-->
+  {{/if}}
+</template>
+<!--
+<template name="addScientist">
+  <form class="new-scientist">
+    <input type="text" name="text" placeholder="Type to add new scientist" />
+  </form>
+</template>
+-->
+<template name="teachers">
+  {{#if hasSubState}}
+    {{> teacherSubState}}
+  {{else}}
+    <ul class="students">
+      {{#each teachers}}
+        {{> student}}
+      {{/each}}
+    </ul>
+  {{/if}}
+</template>
+
+<template name="subjects">
+  {{#if isSelected}}
+    <h1> {{selectedName}} </h1>
+    {{> studentCourseList}}
+  {{else}}
+    <ul class="students">
+      {{#each subjects}}
+        {{> subject}}
+      {{/each}}
+    </ul>
+  {{/if}}
+</template>
+
+<template name="subject">
+  <li class="player {{selected}}">
+    <span class="name"><div name="studentName">{{name}}</div></span>
+  </li>
+</template>
+
+
+
+<template name="teacherSubState">
+  <h1> {{name}} </h1>
+  {{> studentSubMenu}}
+  {{#if isInfo}}
+  <h2>Personal Information</h2>
+      {{> personalInfoTable}}
+  {{/if}}
+  {{#if isCourses}}
+      {{> studentCourseList}}
+  {{/if}}
+  {{#if isSchedule}}
+    <h2>Schedule</h2>
+    <table class = "schedule"><tr><td colspan = 6 align = "center" style="font-size:28px">Pierrepont</td></tr>
+      <tr><td colspan = 6 ><span style="float:left;">{{name}}</span><span style="float:right;">2016-2017</span></td></tr>
+      <tr><td colspan = 6 height = 12></td></tr>
+      <tr><td class = "schedulePer"></td>
+        <td class = "schedule">Monday</td>
+        <td class = "schedule">Tuesday</td>
+        <td class = "schedule">Wednesday</td>
+        <td class = "schedule">Thursday</td>
+        <td class = "schedule">Friday</td>
+      </tr>
+    {{#each scheduleRows}}
+      {{> scheduleRow}}
+    {{/each}}
+  </table>
+  {{/if}}
+</template>
+
+<template name="rooms">
+  {{#if isSelected}}
+    <h1> {{selectedName}} </h1>
+    {{> scheduleTable}}
+  {{else}}
+    <ul class="students">
+      {{#each rooms}}
+        {{> room}}
+      {{/each}}
+    </ul>
+  {{/if}}
+</template>
+
+<template name="room">
+  <li class="player {{selected}}">
+    <span class="name"><div name="studentName">{{name}}</div></span>
+  </li>
+</template>
+
+<template name="schedulePageState">
+  <h1>Schedule</h1>
+  <ul>
+  {{#each courses}}
+    {{> course}}
+  {{/each}}
+  </ul>
+</template>
+
+<template name="course">
+  <li class="player {{selected}}">
+    <span class="name"><div name="studentName">{{name}}</div></span>
+    {{#if isSelected}}
+    <table class="options">
+      <tr>
+        <!--span class="teachers"><td class="options">
+        {{#if oneTeacher}}
+          {{#each teachers}}
+            {{> liTeacher}}
+          {{/each}}
+        {{else}}
+          {{numTeachers}}
+        {{/if}}
+      </td></span-->
+        <span class="teachers"><td class="options">{{numTeachers}}</td></span>
+        <span class="students"><td class="options">{{numStudents}}</td></span>
+        <span class="meetings"><td class="options">{{numMeetings}}</td></span>
+        <span class="moreOptions"><td class="options">{{moreOptions}}</td></span>
+      </tr>
+    </table>
+    {{#if isStudents}}
+      {{#each students}}
+        {{> liStudent}}
+      {{/each}}
+    {{/if}}
+    {{#if isTeachers}}
+      {{#each teachers}}
+        {{> liTeacher}}
+      {{/each}}
+    {{/if}}
+    {{#if isMeetings}}
+      {{#each meetings}}
+        {{> liMeeting}}
+      {{/each}}
+    {{/if}}
+    {{#if isMoreOptions}}
+      {{#each options}}
+        {{> liOption}}
+      {{/each}}
+    {{/if}}
+    {{/if}}
+  </li>
+</template>
+
+<template name = "liStudent">
+  <li>
+  {{student}}
+</li>
+</template>
+<template name = "liTeacher">
+  <li>
+  {{teacher}}
+</li>
+</template>
+<template name = "liMeeting">
+  <li>
+  {{meeting}}
+</li>
+</template>
+<template name = "liOption">
+  <li>
+  {{option}}
+</li>
+</template>
